@@ -1,1 +1,163 @@
 
+Table of Contents
+
+1.	Table of figures
+2.	Section A – Public Data Science Project
+3.	Section B – Impact evaluation
+4.	References
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.Table of figures
+
+1.	Figure A.1: Example of junk data removal
+2.	Figure A.2: Breakdown of data for chosen variables
+3.	Figure A.3: Results table
+4.	Figure A.4: Confusions matrices
+5.	Figure A.5: ROC Curves
+6.	Figure B.1: Example of code used
+7.	Figure B.2: Distribution of age variable
+8.	Figure B.3 distribution of rate variable
+9.	Figure B.4: Logistic regression results
+10.	Figure B.5: Model results and details
+11.	Figure B.6: Confusion matrices
+12.	Figure B.6: ROC Curves
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Section A – Data Science Project
+
+
+Executive summary
+
+Research Question: What factors influence the long-term success of pc video games? Can common themes be identified which might help developers focus resources on games which are likely to yield long term player bases and increase opportunities for further sales?
+
+This project describes the steps taken to model a dataset taken from the Steam online computer game service, this will evaluated to see if future success can be predicted. 
+
+This work describes a model capable of sufficient performance to merit iterative work and expansion. Nearly a thousand unique video games were analysed, with efforts focused on predicting long-term player engagement from 3 primary metrics. Achieving an accuracy rating of over 70% and an Auc value above 80%. Potentially this will allow a novel approach to monitoring the success of games at launch, helping future developers make pragmatic and value-based judgements.
+
+Available at: https://github.com/lordgriznak/BPP_GE2024 
+
+Introduction and project background
+
+This project investigates if data available from the steam games platform can offer insight into how well a games long-term success can be predicted. Developers can generate income from games they release after the, this comes in the form of downloadable-content (DLC), expansions and cosmetics. This requires a long-term player base willing purchase additional content. Creating a trade-off between the investment cost for future development and the expected revenue.
+
+We are hoping to identify variables which can predict long term success. Aiding developers in assessing the success of new game releases, helping them to allocate investment appropriately.
+
+
+Methods
+
+Source:  (https://www.kaggle.com/datasets/nikdavis/steam-store-game)
+•	Variables: Variables include; metacritic score, #dlc released, price, hours played (overall, average last 2 weeks), total sales , % positive reviews
+o	Price has been discounted as not fixed over time. Overall playtime discounted as it does not reflect the current player base.
+o	Metacritic and user scores will be used, Metacritic scores are generated at release so will be known to a developer. User scores represent player enjoyment it.  
+o	The amount (DLC) released is used, representing additional content released to consumers after the original launch. 
+•	Regression: Logistic regression will be used based on engineered binary value (active) based on 10+ hours average from past two weeks, 10 being the median result in the dataset. This binary value is tested via a classification exercise. Variables used are Metacritic score; user score and DLC. Metacritic and user score are known after launch, if a predictive model can be developed this will assist evaluating the value of releasing additional content.
+
+
+•	Data Quality Audit: 
+o	The dataset was created via scraping techniques applied to the steam online games store. This has led to junk data, this is removed. Reviewed for the presence of legal, ethical or privacy concerns. Validation of values against current steam store information. The review is satisfied that the data is public data and contains no intellectual property (IP), personally identifiable information (PII) or legal/morally concerns.
+
+o	The dataset has been filtered to exclude games within the last 2 years in order to provide a mature dataset where the average time played in the last 2 weeks represents a long-term player base. 
+
+o	Outlying data is present, some longstanding franchises with annual iterations (e.g. Fifa football games) have extremely large player bases with positive user scores so high they risk unbalancing the model, similarly there are others with less than 10,000 sales. Sale values of 10k – 20m are included encompassing 99% of the data, while still a wide range it reflects the market. Follow up work may be possible to create more granular, filtered by sales, datasets; potentially showing variances relating to sales or initial budget. 
+Power BI has been used to analyse and transform this dataset, this is due to the size of the raw data and the amount of cleaning required.
+Figure A.1: Example of junk data removal
+ 
+Above shows invalid  name characters and null values. Some persisted after several transformation steps, these were removed by changing null values to 999 and the deleting in the advanced editor.
+Figure A.2: Breakdown of data for chosen variables
+ 
+Somewhat normal distributions for Metacritic score and % positive. The metacritic score has a high mean reflecting how video games are scored, as discussed by ‘gideonsgaming’ (Gideon, 2019) it is less common for games to score below 6/10 (60/100). This is also seen split of positive user scores, albeit less normally distributed. DLC count was restricted 50 to avoid outliers (keeping 99% of data) .
+Model Details
+After cleansing we have 2,100 rows, 478 of which were active. These all included, remaining data was under-sampled, addressing imbalance giving 956 rows and 50/50 active/inactive. 80/20 split used for train/test data.
+Analysis Methodology
+•	Technique: Logistic regression has used the binary value (Active) to measure long term success based on average two-week playtime, median score for this is 10 hours over games which are still being played actively. Using a yes/no score for ‘is the game still being played actively after 2 years release (i.e. 10+ hours 2-week play average) allows a classification exercise against the remaining variables present.
+o	Metacritic score, user scores and DLC are used.
+o	These variables have been modelled individually to get a feel for their predictive power, they have then been modelled together to see if they offer a better performance when combined.
+•	Limitations: The original dataset required substantial cleaning, de-duplication and refining to produce a suitable dataset. This resulted in the loss of over 90% of the original data! However the data remaining is complete, with unique rows and no significant outliers. It is felt that the dataset is acceptable for an initial exercise, but it is recognised that any findings should be subject to rigorous follow up work to refine and validate any findings. Working with the owner of the Steam platform (Valve) to source a better initial dataset may be one way to improve. 
+Alternatively it may be possible to use more of the data with python-based data cleaning methods such as those described by Shiksa online (Shiksha.com, 2020), the skillset for doing this is beyond the writer currently but it is a possibility for future study and may feature in later portfolio work.
+Figure A.3: Results table
+The table below shows the results of the regression activity. The variables were considered individually and as a combined exercise. Training took place over 764 rows and then tested against 191 rows for an 80/20 split.
+Logistic Regression Results
+Metric	Total apps in test set	Accuracy	False Positive	False Negative	True Positive	True Negative	Coefficient
+MetaCritic Score	191	60%	41	36	60	54	3.1
+% User Scores Positive	191	62%	29	43	53	66	2.10
+# DLC Released	191	50%	32	64	32	63	-0.2
+Model A	191	67%	38	25	71	57	6.1
+Model B	191	61%	36	38	58	59	5.4
+Model C	191	73%	32	19	77	63	7.2
+
+The single variables offered some predictive capability (better than 50%). However the combination of all three variables has yielded the best accuracy, predicting 73% of results. 
+The model is more effective at predicting positive outcome, correctly predicting 77/96 (80%) positive rows. However it still proves effective for negative outcomes as well, predicting 63/95 (66%). 
+This model may help developers forecast how much DLC will be needed to maintain an active player based after two years. Facilitating more accurate, data-led decisions about which games to continue supporting. 
+
+Figure A.4: Confusion matrices
+ 
+
+Model C achieves both the best specificity and sensitivity and is the optimal solution for this exercise. Model A has a similar level of specificity with its high true positive rate, however the lowest performance on false positives means its sensitivity performance is reduced.
+
+
+
+
+
+
+Figure A.5: ROC curves
+ 
+
+Model C shows the best left skew from the models; reaching TPR of 60% before FPR skews right substantially, whilst achieving an Auc value of 81%. This suggests the model fits the test data well and supports further development.
+
+
+
+
+
+
+
+
+Conclusion
+
+The variables chosen have been shown to work in a data model predicting the likely long term success of games on the steam store, based on the reviewer and user scores and subsequent content releases. This has the potential to allow evaluation of a game’s success, allowing developers to make future plans for their releases.
+However, it should be noted that steam is just one of many game stores online, it is unknown if the model could achieve similar results with competing stores (i.e. Apple, Epic games). Furthermore, the loss of the majority of the dataset raises a concern that the results may be tautological in nature. 
+
+Recommendations:
+
+•	Engagement of the steam store owners (Valve) in the hope of obtaining a more complete dataset would allow the model to be tuned against a larger subset of the data. This would hopefully provide more assurance of the model’s performance.
+•	Sourcing similar data from alternative stores might allow comparative models to be built. Similarly it may be possible to source dataset from other sources which can enrich the existing dataset (e.g. obtaining more data from Metacritic, running similar scraping exercises on Steam).   
+•	Running prediction model on newly released games on steam store and identifying games marked as likely to be successful if supported with X DLC.
